@@ -30,11 +30,13 @@ fun AudioRecorder(viewModel: SpeechViewModel = viewModel()) {
         Pair("compose", "kəmˈpoʊz"),
         Pair("android", "ˈændrɔɪd")
     )
+
+    val result = viewModel.resultText.collectAsState()
     val context = LocalContext.current
     var isRecording by remember { mutableStateOf(false) }
     var recordingFilePath by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
-    val recorder = remember { MediaRecorder() }
+    var recorder = remember { MediaRecorder() }
     var currentWord by remember { mutableStateOf(words.random()) }
 
     Column(
@@ -76,8 +78,10 @@ fun AudioRecorder(viewModel: SpeechViewModel = viewModel()) {
                     if (isRecording) {
                         stopRecording(recorder, recordingFilePath)
                         isRecording = false
+
                     } else {
                         try {
+                            recorder = MediaRecorder() // Create a new instance
                             startRecording(context, recorder) { path ->
                                 recordingFilePath = path // Update the filePath State
                                 isRecording = true
@@ -100,6 +104,8 @@ fun AudioRecorder(viewModel: SpeechViewModel = viewModel()) {
                     Text("Upload Audio")
                 }
             }
+
+            Text(result.value)
         }
     }
 }

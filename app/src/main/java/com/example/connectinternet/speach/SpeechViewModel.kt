@@ -21,36 +21,41 @@ import java.io.IOException
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.File
 
 class SpeechViewModel : ViewModel() {
     private val client = OkHttpClient()
-    private var resultText by mutableStateOf("")
+    private val _resultText = MutableStateFlow<String>("")
+    val resultText: StateFlow<String> = _resultText.asStateFlow()
+
     fun uploadAudioFile(filePath: String) {
         viewModelScope.launch {
             val file = File(filePath)
-            val requestBody = RequestBody.create("application/octet-stream".toMediaTypeOrNull(), file)
+            val requestBody =
+                RequestBody.create("application/octet-stream".toMediaTypeOrNull(), file)
             val request = Request.Builder()
-                .url("https://stt.api.cloud.yandex.net/speech/v1/stt:recognize?topic=general")
+                .url("https://stt.api.cloud.yandex.net/speech/v1/stt:recognize?topic=general&lang=en-US")
                 .addHeader("Authorization", "Api-key AQVN3SBzhU-ix0y0-vo6WfrEXmlo7f04h_lwVFek")
                 .post(requestBody)
                 .build()
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    resultText = "Error: ${e.message}"
+                    _resultText.value = "Error: ${e.message}"
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     if (response.isSuccessful) {
-                        val jsonResponse = response.body?.string()
-                        resultText = jsonResponse ?: "Нет результата"
-                        Log.d("resultText",resultText)
+                        _resultText.value =  Gson().fromJson(response.body?.string(), Result::class.java).result
+                        Log.d("resultText",  _resultText.value)
                     } else {
-                        resultText = "Ошибка: ${response.code}, ${response.message}"
-                        Log.d("resultText",resultText)
+                        _resultText.value = "Ошибка: ${response.code}, ${response.message}"
+                        Log.d("resultText",  _resultText.value)
                     }
                 }
             })
