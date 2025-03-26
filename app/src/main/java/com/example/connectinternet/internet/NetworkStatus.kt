@@ -1,9 +1,8 @@
-package com.example.connectinternet
+package com.example.connectinternet.internet
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 
 class NetworkStatus(private val context: Context) {
     fun isOnline(): Boolean {

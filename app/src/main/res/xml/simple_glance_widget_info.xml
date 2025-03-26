@@ -4,10 +4,7 @@
     android:previewLayout="@layout/widget_layout"
     android:minWidth="250dp"
     android:minHeight="110dp"
-    android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:maxResizeWidth="1050dp"
-    android:maxResizeHeight="787dp"
-    android:targetCellWidth="5"
-    android:targetCellHeight="3"
+    android:targetCellWidth="4"
+    android:targetCellHeight="1"
     />

@@ -4,11 +4,12 @@ package com.example.connectinternet
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
-import com.example.connectinternet.speach.AudioRecorder
+import com.example.connectinternet.internet.ErrorScreen
+import com.example.connectinternet.internet.NetworkStatus
+import com.example.connectinternet.speech.AudioRecorder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

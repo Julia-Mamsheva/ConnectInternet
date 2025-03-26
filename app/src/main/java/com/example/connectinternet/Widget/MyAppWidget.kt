@@ -1,4 +1,4 @@
-package com.example.connectinternet
+package com.example.connectinternet.Widget
 
 
 import androidx.compose.runtime.Composable
@@ -13,9 +13,27 @@ import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.text.Text
+import com.example.connectinternet.MainActivity
 
 class MyAppWidget : GlanceAppWidget() {
 
+    //Еще Android Manifest
+    /*
+        <receiver
+            android:name=".Widget.SimpleGlanceAppWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/simple_glance_widget_info" />
+        </receiver>
+    */
+    //Еще xml/simple_glance_widget_info
+
+    //Еще layout widget_layout
     @Composable
     override fun Content() {
 
@@ -40,7 +58,3 @@ class MyAppWidget : GlanceAppWidget() {
     }
 }
 
-class SimpleGlanceAppWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget
-        get() = MyAppWidget()
-}

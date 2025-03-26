@@ -1,4 +1,4 @@
-package com.example.connectinternet
+package com.example.connectinternet.internet
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

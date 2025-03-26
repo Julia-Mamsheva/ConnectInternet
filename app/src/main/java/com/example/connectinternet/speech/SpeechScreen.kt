@@ -1,4 +1,4 @@
-package com.example.connectinternet.speach
+package com.example.connectinternet.speech
 
 import android.Manifest
 import android.app.Activity

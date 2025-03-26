@@ -1,4 +1,4 @@
-package com.example.connectinternet.speach
+package com.example.connectinternet.speech
 
 data class ErrorResponse(
     val error_code: String,

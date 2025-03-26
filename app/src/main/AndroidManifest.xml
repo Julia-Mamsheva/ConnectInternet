@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".SimpleGlanceAppWidgetReceiver"
+            android:name=".Widget.SimpleGlanceAppWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
