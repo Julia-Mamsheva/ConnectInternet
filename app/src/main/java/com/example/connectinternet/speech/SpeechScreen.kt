@@ -30,6 +30,7 @@ fun AudioRecorder(viewModel: SpeechViewModel = viewModel()) {
         Pair("compose", "kəmˈpoʊz"),
         Pair("android", "ˈændrɔɪd")
     )
+    var cx = LocalContext.current
 
     val result = viewModel.resultText.collectAsState()
     val context = LocalContext.current
@@ -76,14 +77,14 @@ fun AudioRecorder(viewModel: SpeechViewModel = viewModel()) {
                     )
                 } else {
                     if (isRecording) {
-                        stopRecording(recorder, recordingFilePath)
+                        viewModel.stopRecording(cx, recorder)
                         isRecording = false
-
+                        recorder = MediaRecorder()
                     } else {
                         try {
-                            recorder = MediaRecorder() // Create a new instance
-                            startRecording(context, recorder) { path ->
-                                recordingFilePath = path // Update the filePath State
+                            recorder = MediaRecorder()
+                            viewModel.startRecording(context, recorder) { path ->
+                                recordingFilePath = path
                                 isRecording = true
                             }
                         } catch (e: IOException) {
@@ -94,47 +95,76 @@ fun AudioRecorder(viewModel: SpeechViewModel = viewModel()) {
                 Text(if (isRecording) "Stop Recording" else "Start Recording")
             }
             Spacer(modifier = Modifier.height(16.dp))
+            val resultState by viewModel.resultState.collectAsState()
 
-            recordingFilePath?.let { filePath ->
-                Button(onClick = {
-                    scope.launch {
-                        viewModel.uploadAudioFile(filePath)
+            when (resultState) {
+                is ResultState.Error -> {
+                    recordingFilePath?.let { filePath ->
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.uploadAudioFile(filePath)
+                            }
+                        }) {
+                            Text("Upload Audio English")
+                        }
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.uploadAudioFileRussia(filePath)
+                            }
+                        }) {
+                            Text("Upload Audio Russia")
+                        }
                     }
-                }) {
-                    Text("Upload Audio")
+                }
+
+                ResultState.Initialized -> {
+                    recordingFilePath?.let { filePath ->
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.uploadAudioFile(filePath)
+                            }
+                        }) {
+                            Text("Upload Audio English")
+                        }
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.uploadAudioFileRussia(filePath)
+                            }
+                        }) {
+                            Text("Upload Audio Russia")
+                        }
+                    }
+                }
+
+                ResultState.Loading -> {
+                    CircularProgressIndicator()
+                }
+
+                is ResultState.Success -> {
+                    recordingFilePath?.let { filePath ->
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.uploadAudioFile(filePath)
+                            }
+                        }) {
+                            Text("Upload Audio English")
+                        }
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.uploadAudioFileRussia(filePath)
+                            }
+                        }) {
+                            Text("Upload Audio Russia")
+                        }
+                    }
                 }
             }
+
+
 
             Text(result.value)
         }
     }
 }
 
-fun startRecording(context: Context, recorder: MediaRecorder,onRecordingStarted: (String) -> Unit) {
-    val outputFile = File(context.getExternalFilesDir(null), "audio.ogg")
-    recorder.apply {
-        setAudioSource(MediaRecorder.AudioSource.MIC)
-        setOutputFormat(MediaRecorder.OutputFormat.OGG)
-        setAudioEncoder(MediaRecorder.AudioEncoder.OPUS)
-        setOutputFile(outputFile.absolutePath)
-        try {
-            prepare()
-            start()
-            onRecordingStarted(outputFile.absolutePath)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-}
-
-fun stopRecording(recorder: MediaRecorder, filePath: String?) {
-    recorder.apply {
-        try {
-            stop()
-            release()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-}
 
