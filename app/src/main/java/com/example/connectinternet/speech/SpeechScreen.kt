@@ -78,19 +78,18 @@ fun AudioRecorder(viewModel: SpeechViewModel = viewModel()) {
                 } else {
                     if (isRecording) {
                         viewModel.stopRecording(cx, recorder)
-                        isRecording = false
-                        recorder = MediaRecorder()
                     } else {
                         try {
                             recorder = MediaRecorder()
                             viewModel.startRecording(context, recorder) { path ->
                                 recordingFilePath = path
-                                isRecording = true
+
                             }
                         } catch (e: IOException) {
                         }
                     }
                 }
+                isRecording = !isRecording
             }) {
                 Text(if (isRecording) "Stop Recording" else "Start Recording")
             }

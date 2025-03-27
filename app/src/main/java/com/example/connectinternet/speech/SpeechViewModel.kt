@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -44,9 +45,7 @@ class SpeechViewModel : ViewModel() {
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    _resultText.value = "Error: ${e.message}"
-                    _resultState.value = ResultState.Error(e.message.toString())
-
+                    ResultState.Error(e.message.toString())
                 }
 
                 override fun onResponse(call: Call, response: Response) {
@@ -78,8 +77,7 @@ class SpeechViewModel : ViewModel() {
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    _resultText.value = "Error: ${e.message}"
-                    _resultState.value = ResultState.Error(e.message.toString())
+                    ResultState.Error(e.message.toString())
                 }
 
                 override fun onResponse(call: Call, response: Response) {
@@ -108,8 +106,11 @@ class SpeechViewModel : ViewModel() {
                 prepare()
                 start()
                 onRecordingStarted(outputFile.absolutePath)
+                Toast.makeText(context, "Запись начала", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Toast.makeText(context, e.printStackTrace().toString(), Toast.LENGTH_SHORT).show()
+                Log.e("startRecording", e.message.toString())
+
+                Toast.makeText(context, e.message.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -123,7 +124,8 @@ class SpeechViewModel : ViewModel() {
                 Toast.makeText(context, "Запись успешно завершена", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context, e.printStackTrace().toString(), Toast.LENGTH_SHORT).show()
+                Log.e("stopRecording", e.message.toString())
+                Toast.makeText(context, e.message.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }
