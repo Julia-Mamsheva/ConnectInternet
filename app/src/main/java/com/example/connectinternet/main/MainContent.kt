@@ -19,13 +19,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import java.util.Locale
 
 
 @Composable
-fun MainContent() {
+fun MainContent(navController: NavHostController) {
+    Column {
     // Ваш основной контент приложения
     Text(text = "Добро пожаловать в приложение! \uD83D\uDE1E")
+    Button(onClick = {navController.navigate("Speech") }) {
+        Text("Next Screen")
+    }}
 }
 
 @Composable
@@ -33,16 +38,13 @@ fun LanguageSelectionScreen() {
     var selectedLanguage by remember { mutableStateOf("English") }
     var showDialog by remember { mutableStateOf(false) }
 
-    // Список доступных языков
-    val languages = listOf("Español", "Français", "Deutsch","\uD83D\uDE1E")
 
-    // Проверка системного языка
     val systemLanguage = Locale.getDefault().displayLanguage
     Log.d("language", systemLanguage)
     val availableLanguages = listOf(systemLanguage, "English", "Español", "Français", "Deutsch")
 
 
-    // Основной интерфейс
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,

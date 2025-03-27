@@ -2,7 +2,6 @@ package com.example.connectinternet.speech
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import androidx.compose.foundation.layout.*
@@ -18,8 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.launch
-import java.io.File
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import java.io.IOException
 
 @Composable

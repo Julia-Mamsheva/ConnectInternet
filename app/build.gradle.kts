@@ -81,4 +81,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
+    implementation ("androidx.core:core-ktx:1.6.0")
+
+    implementation("androidx.navigation:navigation-compose:2.8.6")
+
 }
